@@ -15,10 +15,41 @@
   Add images to 'assets/images/ and uncomment this 'gumdrop' path for local image preview:
   {%- set gum = "../../assets/images/" -%}
 #}
-
 {# import macro library base #}
 {%- import 'assets/partial/macro_base.html' as base with context %}
 
 {%- block email_content %}
+  <table class="container" role="presentation" dir="{{ dir }}" align="center" bgcolor="#ffffff" cellpadding="0" cellspacing="0"> 
+  
+    <!-- masthead -->
+    {#
+      use the composer here for your logo on line 33: https://connect.corp.google.com/composer/#/composer/snippet/9326626
+      if your logo is not in the any of the macros in the composer, add a macro with your logo
+    #}
+    {%- block masthead -%}
+      <tr>
+        <td class="masthead">
+          <a href="#">
+            <@img_pixel_v2_mod_lib /> 
+          </a>
+        </td>
+      </tr>
+    {%- endblock masthead -%}
 
+    <!-- content module -->
+    {%- block email_partials %}
+      Use ../index.html
+    {%- endblock email_partials %}
+
+    <!-- support module -->
+    {%- block support -%}
+      {# empty for now #}
+    {%- endblock support -%}
+
+    <!-- footer module -->
+    {%- block footer -%}
+      {# empty for now #}
+    {%- endblock footer -%}
+
+  </table>
 {%- endblock email_content %} 

@@ -1,13 +1,35 @@
-From:
-Subject:
+From: {{ from }}
+Subject: {{ subject }}
 
 {# freemarker #}
 {%- block freemarker %}
-<#compress>
-</#compress>
+    <#compress>
+    <#include '/gkmsid/9882423' ignore_missing=true /> {# lpage snippet for links #}
+    <#include '/gkmsid/7444236' ignore_missing=true /> {# view in browser #}
+    </#compress>
 {%- endblock %}
+ <${view_in_browser()}>
 
 {# Add plain text content within the plain_text block filter #}
 {% filter plain_text %}
+
+{# commonly used footer copy and links - replace with your program-specific copy vars and link names #}
+{{ discover_copy }}
+{{ support_copy[0] }}
+{{ support_copy[1] }}
+
+{{ social_alt[0] }}
+{{ social_alt[1] }}
+{{ social_alt[2] }}
+{{ social_alt[3] }}
+
+{{ hats_headline }}
+{{ hats_alt[0] }}
+{{ hats_alt[1] }}
+{{ hats_alt[2] }}
+
+Google LLC 1600 Amphitheatre Parkway, Mountain View, CA 94043 USA
+
+{{ optout }}
 
 {% endfilter %}

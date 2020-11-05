@@ -1,0 +1,1289 @@
+{#- Hardware Macro Library 1.0 : 
+  THERE IS A FULL PILOT VERSION OF WELCOME 
+  WITH REFERENCES TO MACRO CALLS AND USAGE
+  IN THE BOILERPLATE DIRECTORY:
+  {{ NULL }}
+  
+  
+  1.1 - Here is a list of available macros for use:
+  *** All Macros can take these optional parameters - class, langs, gamma_condition
+  *** 
+  *** Macro base source code is available @: {{ NULL }}
+  ***
+  * base.module() - responsive generic container, add class for each module.
+  * base.show_hide() - responsive module using the hide and show method, takes two arrays, desktop_contents=[], and mobile_contents=[]
+  * base.text() - generic copy macro, element used by default is <p> unless specificied
+  * base.query() - query bubble macro, no mso support needed for this version
+  * base.box() - callout box module, pass in the desktop width and resize for mobile in your CSS
+  * base.spacer() - vertical spacer, requires a height parameter to be passed in
+  * base.two_column() - generic two column module, specify col-1, col-2, and spacer widths
+  * base.three_column() - generic three column module, specify col-1, col-2, col-3, and spacer widths
+  * base.four_column() - generic four column module, specify col-1, col-2, col-3, col-4, and spacer widths
+  * base.two_column_responsive() - responsive stackable two column module
+  * base.three_column_responsive() - responsive stackable three column module
+  * base.four_column_responsive() - responsive stackable four column module
+  * base.rtl_two_column_responsive() - responsive two-column module that will stack RTL for cases where the right col needs to stack on top for mobile.
+  * base.button() - button macro, pass in the btn_style, you can customize your buttons further(font-size, line-height, padding, etc) through CSS
+  * base.comment() - takes a string parameter, use to add comments to your content sequences.
+  * base.freemarker() - outputs passed-in code inside a td. Used for outputting logos from a Composer snippet 9326626 which returns complete img tags.
+  * please do not hesitate to reach out @huyb for any questions!!
+#}
+
+{%- set gum = "https://services.google.com/fh/files/emails/" -%}
+{%- set img_spacer = gum ~ "spacer.png" -%}
+{%- set img_card_top = gum ~ "google_home_modular_card_shadow_top_480.jpg" -%}
+{%- set img_card_bottom = gum ~ "google_home_modular_card_shadow_bot_480.png" -%}
+
+{%- macro spacer(height, langs, gamma_condition, class, colspan="1", mso_show=true) %}
+  {# Used to create vertical space between elements.
+    Arguments:
+      height: Integer or String. Defines the height of the spacer.
+      class: String. Adds this value to the class="" attribute of the <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all languages.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+  {% if mso_show == false %}
+    <!--[if !mso]-->
+  {% endif %}
+
+  {% if class != "" %}
+    <tr>
+      <td style="font-size:{{ height }}px;line-height:{{ height }}px;padding:0;" colspan="{{ colspan|default('1') }}" height="{{ height }}" class="{{ class }}">
+        &nbsp;
+      </td>
+    </tr>
+  {% else %}
+    <tr>
+      <td style="font-size:{{ height }}px;line-height:{{ height }}px;padding: 0;" colspan="{{ colspan|default('1') }}" height="{{ height }}">
+        &nbsp;
+      </td>
+    </tr>
+  {% endif %}
+    
+  {% if mso_show == false %}
+    <!--[endif]-->
+  {% endif %}
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{%- endmacro %}
+
+{% macro text(copy, langs, gamma_condition, class, link, element="p") %}
+  {# Used to create a semantic text element
+    Arguments:
+      copy: Sequence or String. All content to be displayed in the module.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      link:
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+  <tr>
+    <td class="copy {{ element }} {{ class }}">
+      <{{ element }}>
+        {% if link %}
+          <a href="{{ link }}">{{ copy }}</a>
+        {% else %}
+          {{ copy }}
+        {% endif %}
+      </{{ element }}>
+    </td>
+  </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+
+{%- macro image(image, img_align, alt, link, height, width, class, langs, gamma_condition, mso_show=true) %}
+  {#
+    Outputs an image inside a <td>
+    Arguments:
+      image: String. Outputs value to the src="" attribute of the <img> tag. 
+      img_align: image placement , left, center, right 
+      alt: String. Outputs value to the alt="" attribute of the <img> tag.
+      link: String. Adds a link & outputs value to the href="" attribute, if defined. <a> tag is not added if this argument is empty/undefined.
+      height: String or Integer. Outputs value to the height="" attribute of the <img> tag.
+      width: String or Integer. Outputs value to the width="" attribute of the <img> tag.
+      class: String. Adds this value to the class="" attribute of the <td> containing the query bubble. 
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %} 
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    {% if mso_show == false%}
+      <!--[if !mso]-->
+    {% endif %}
+      <tr>
+        <td align="{{ img_align|default('center') }}" class="{{ class }}">
+          {# msam: 10-08-2020 -- Automatically handles the aria-hidden attr value based upon the presence / absence of alt text #}
+          {% if alt|length > 0 %}
+            {% set aria_hidden = false %}
+          {% else %}
+            {% set aria_hidden = true %}
+          {% endif %} 
+        
+          {% if link %}
+            <a href="{{ link }}" aria-hidden="{{ aria_hidden }}">
+          {% endif %}
+            <img src="{{ image }}" height="{{ height }}" width="{{ width }}" alt="{{ alt }}" />
+          {% if link %}
+            </a>
+          {% endif %}   
+        </td>
+      </tr>
+    {% if mso_show == false %}
+      <!--[endif]-->
+    {% endif %}
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro module(contents, bg_img, class, langs, gamma_condition, mso_bg, mso_height, table_align, bgcolor="", mso_bg_color="", mso_show=true, mso_support=true) %}
+  {# Used to create a top-level module element without a card-style visual treatment
+    Arguments:
+      contents: Sequence or String. All content to be displayed in the module.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    {% if mso_show == false%}
+      <!--[if !mso]-->
+    {% endif %}
+    <tr>
+      <td class="container {{ class }}" bgcolor="{{ bgcolor }}" valign="top" background="{{ bg_img }}" align="{{ table_align|default('center') }}" style="background-repeat: no-repeat;">
+        {% if bg_img and mso_support == true %}
+          <!--[if gte mso 9]>
+          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ mso_width|default(bg_width) }}px;height:{{ mso_height|default(bg_height) }}px;">
+            <v:fill type="tile" src="{{ mso_bg|default(bg_img) }}" color="{{mso_bg_color}}" />
+            <v:textbox inset="0,0,0,0">
+          <![endif]-->
+        {% endif %}
+        <div>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" align="{{ table_align|default('center') }}">
+            {% for content in contents %}
+              {{ content }}
+            {% else %}
+              {{ contents }}
+            {% endfor %}
+          </table>
+        </div>
+        {% if bg_img and mso_support == true %}
+          <!--[if gte mso 9]>
+            </v:textbox>
+          </v:rect>
+          <![endif]-->
+        {% endif %}
+      </td>
+    </tr>
+    {% if mso_show == false %}
+      <!--[endif]-->
+    {% endif %}
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro show_hide(desktop_contents, mobile_contents, desktop_class, mobile_class, langs, gamma_condition, mso_show=true) %}
+  {# Used to create a top-level module element without a card-style visual treatment
+    Arguments:
+      contents: Sequence or String. All content to be displayed in the module.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    {% if mso_show == false%}
+      <!--[if !mso]-->
+    {% endif %}
+    
+      <tr>
+        <td class="{{desktop_class}} desktop">
+          <div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              {% for content in desktop_contents %}
+                {{ content }}
+              {% else %}
+                {{ desktop_contents }}
+              {% endfor %} 
+            </table>
+          </div>
+        </td>
+      </tr>
+      
+      <!--[if !mso]-->
+      <tr style="mso-hide: all !important;">
+        <td class="{{mobile_class}} mobile">
+          <div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              {% for content in mobile_contents %}
+                {{ content }}
+              {% else %}
+                {{ mobile_contents }}
+              {% endfor %}
+            </table>
+          </div>
+        </td>
+      </tr>
+      <!--[endif]-->
+    
+    {% if mso_show == false %}
+      <!--[endif]-->
+    {% endif %}
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro box(contents, bg_img, width, class, langs, gamma_condition, mso_bg, mso_height, bgcolor, table_class, table_align="center", mso_show=true, mso_support=true) %}
+  {# Used to create a top-level module element without a card-style visual treatment
+    Arguments:
+      contents: Sequence or String. All content to be displayed in the module.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    {% if mso_show == false %}
+      <!--[if !mso]-->
+    {% endif %}
+    <tr>
+      <td align="{{ table_align }}" valign="top">
+        <table role="presentation" align="{{ table_align }}" class="{{ table_class }}" width="{{ width }}" bgcolor="{{ bgcolor }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="{{ class }} module" valign="top" background="{{ bg_img }}">
+              {% if bg_img and mso_support == true %}
+                <!--[if gte mso 9]>
+                <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ width }}px;height:{{ mso_height }}px;">
+                  <v:fill type="tile" src="{{ mso_bg|default(bg_img) }}" color="{{ bg_color }}" />
+                  <v:textbox inset="0,0,0,0">
+                <![endif]-->
+              {% endif %}
+              <div>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  {% for content in contents %}
+                    {{ content }}
+                  {% else %}
+                    {{ contents }}
+                  {% endfor %}
+                </table>
+              </div>
+              {% if bg_img and mso_support == true %}
+                <!--[if gte mso 9]>
+                  </v:textbox>
+                </v:rect>
+                <![endif]-->
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    {% if mso_show == false %}
+      <!--[endif]-->
+    {% endif %}
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{%- macro button(copy, link, btn_style, btn_align, align, class, langs, gamma_condition, bgcolor="#3E82F7") %}
+  {# Used to create a CTA buttons
+    Arguments:
+      copy: String. The button's label.
+      link: String. Defines the URL where the button should point to.
+      **btn_style: Pick a button style (outline-blue, outline-white, solid-blue, solid-white)**DEPRED
+      btn_align: Placement of a button, center, left or right
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+      bg_color: String. Hex value of button's color.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td align="{{ btn_align|default('center') }}" class="button {{ btn_style }} {{ class }}">
+        <table role="presentation" cellpadding="0" cellspacing="0" align="{{ btn_align|default('center') }}">
+          <tr>
+            <td align="center">
+              <a class="spacer-top" href="{{ link }}"> </a>
+              <a class="visible" href="{{ link }}">
+                {{ copy }}
+              </a>
+              <a class="spacer-bottom" href="{{ link }}"> </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro two_column(col_1_contents, col_2_contents, spacer_width, spacer_class, class, langs, gamma_condition, col_1_width, col_2_width, col_1_class, col_2_class, col_1_bgcolor, col_2_bgcolor, table_width, col_1_table_class, col_2_table_class, col_1_bg, col_2_bg, col_1_mso_bg, col_2_mso_bg, col_1_bg_color, col_2_bg_color, col_1_mso_height, col_2_mso_height, mso_support=true) %}
+  {# Used to display 2 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="two-col-fixed {{ class }}" >
+        <table role="presentation" align="center" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1-fixed {{ col_1_class }}" background="{{ col_1_bg }}" bgcolor="{{ col_1_bgcolor }}" width="{{ col_1_width }}">
+              {% if col_1_mso_bg and mso_support == true %}
+                <!--[if gte mso 9]>
+                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ col_1_width }}px;height:{{ col_1_mso_height }}px;">
+                  <v:fill type="tile" src="{{ col_1_mso_bg|default(col_1_bg) }}" color="{{ col_1_bg_color }}" />
+                  <v:textbox inset="0,0,0,0">
+                <![endif]-->
+              {% endif %}
+              <table role="presentation" width="100%" class="{{ col_1_table_class }}" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+              {% if col_1_mso_bg and mso_support == true %}  
+                <!--[if gte mso 9]>
+                  </v:textbox>
+                  </v:rect>
+                <![endif]-->
+              {% endif %}
+            </td>
+            <td class="h-spacer-fixed {{spacer_class}}" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" class="{{ spacer_class }}" height="1" width="{{ spacer_width }}" alt="" />
+            </td>
+            <td class="col-2-fixed {{ col_2_class }}" background="{{ col_2_bg }}" bgcolor="{{ col_2_bgcolor }}" width="{{ col_2_width }}">
+              {% if col_2_mso_bg and mso_support == true %}
+                <!--[if gte mso 9]>
+                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ col_2_width }}px;height:{{ col_2_mso_height }}px;">
+                  <v:fill type="tile" src="{{ col_2_mso_bg|default(col_2_bg) }}" color="{{ col_2_bg_color }}" />
+                  <v:textbox inset="0,0,0,0">
+                <![endif]-->
+              {% endif %}
+              <table role="presentation" width="100%" class="{{ col_2_table_class }}" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+              {% if col_2_mso_bg and mso_support == true %}
+                <!--[if gte mso 9]>
+                  </v:textbox>
+                  </v:rect>
+                <![endif]-->
+              {% endif%}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+
+
+{% macro three_column(col_1_contents, col_2_contents, col_3_contents, spacer_width, class, langs, gamma_condition, col_1_width, col_2_width, col_3_width, table_width) %}
+  {# Used to display 3 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    
+    
+    
+    <tr>
+      <td class="three-col {{ class }}" >
+        <table role="presentation" align="center" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1" width="{{ col_1_width }}" valign="top">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-2" width="{{ col_2_width }}" valign="top">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-3" width="{{ col_3_width }}" valign="top">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_3_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_3_contents }}
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro four_column(col_1_contents, col_2_contents, col_3_contents, col_4_contents, spacer_width, class, langs, gamma_condition, col_1_width, col_2_width, col_3_width, col_4_width, col_1_class, col_2_class, col_3_class, col_4_class, col_1_bgcolor, col_2_bgcolor, col_3_bgcolor, col_4_bgcolor, table_width) %}
+  {# Used to display 2 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="four-col {{ class }}" >
+        <table role="presentation" align="center" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1 {{ col_1_class }}" bgcolor="{{ col_1_bgcolor }}" width="{{ col_1_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-2 {{ col_2_class }}" bgcolor="{{ col_2_bgcolor }}" width="{{ col_2_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-3 {{ col_3_class }}" bgcolor="{{ col_3_bgcolor }}" width="{{ col_3_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_3_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_3_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-4 {{ col_4_class }}" bgcolor="{{ col_4_bgcolor }}" width="{{ col_4_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_4_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_4_contents }}
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro five_column(col_1_contents, col_2_contents, col_3_contents, col_4_contents, col_5_contents, spacer_width, class, langs, gamma_condition, col_1_width, col_2_width, col_3_width, col_4_width, col_5_width, table_width) %}
+  {# Used to display 2 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="five-col {{ class }}" >
+        <table role="presentation" align="center" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1" width="{{ col_1_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-2" width="{{ col_2_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-3" width="{{ col_3_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_3_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_3_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-4" width="{{ col_4_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_4_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_4_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            <td class="h-spacer" width="{{ spacer_width }}">
+              <img src="{{ img_spacer }}" height="1" width="{{ spacer_width }}" alt=""/>
+            </td>
+            <td class="col-5" width="{{ col_5_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_5_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_5_contents }}
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro query(copy, class, text_class, langs, gamma_condition, white_query, white_query_width, mso_width, mso_height="40", mso_font_size="16", mso_line_height="22", mso_text_align="center", mso_bg_color="#E0E0E0", arc_size="50", mso_text_color="#212121", hide="false") %}
+  {#
+    Outputs a Home/Assistant "query bubble," usually gray with rounded corners.
+    Arguments:
+      copy: Sequence or String. All content to be displayed in the module.
+      class: String. Adds this value to the class="" attribute of the <td> containing the query bubble.
+      text_class: String. Adds this value to the class="" attribute of the <td> that is the actual query bubble.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+      <tr>
+        <td class="{{ class }}">
+          <table role="presentation" cellpadding="0" cellspacing="0">
+            <tr>
+              <td>
+                {% if white_query and white_query_width %}
+                  <!--[if mso]>
+                    <tr>
+                      <td class="mso-white-query">
+                        <img src="{{white_query}}" width="{{ white_query_width }}" alt="" />
+                      </td>
+                    </tr>
+                  <![endif]-->
+                {% elseif hide and hide|lower == "true" %}
+                
+                {% else %}
+                <!--[if mso]>
+                <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" style="height:{{ mso_height }}px;v-text-anchor:middle;width:{{ mso_width }}px;" arcsize="{{ arc_size }}%" stroke="f" fillcolor="{{ mso_bg_color }}">
+                    <w:anchorlock/>
+                    <p class="{{ class }}" style="mso-line-height-rule: exactly;line-height: {{ mso_line_height }}px;color:{{ mso_text_color }};font-family: 'Google Sans', 'Roboto', 'Helvetica', 'Arial', sans-serif;font-size:16px;text-align:{{ mso_text_align }} !important">
+                      {{ copy }}
+                    </p>
+                </v:roundrect>
+                <![endif]-->
+                {% endif %}
+                <!--[if !mso]-->
+                <div class="query {{ text_class }}">
+                  {{ copy }}
+                </div>
+              <!--[endif]-->
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+
+      {#<tr>
+        <td class="query {{ class }}">
+          <table>
+
+            <tr>
+              <td class="{{ text_class }}">
+                {{ copy }}
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>#}
+
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+
+{%-macro comment(text)-%}{%-endmacro-%}
+
+
+{# -------------------------------------------- #}
+
+
+{% macro two_column_responsive(col_1_contents, col_2_contents, spacer_width, class, langs, gamma_condition, col_1_width, col_2_width, col_1_class, col_2_class, col_1_bgcolor, col_2_bgcolor, table_width) %}
+  {# Used to display 2 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="two-col {{ class }}" >
+        <table role="presentation" align="center" class="stack" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1 {{ col_1_class }}" bgcolor="{{ col_1_bgcolor }}" width="{{ col_1_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-2 {{ col_2_class }}" bgcolor="{{ col_2_bgcolor }}" width="{{ col_2_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+
+{% macro two_column_stacked(left_contents, right_contents, class, langs, gamma_condition, table_width, left_bg, right_bg, left_mso_bg, right_mso_bg, left_bg_color, right_bg_color, left_mso_width, right_mso_width, left_mso_height, right_mso_height, left_width="50%", right_width="50%", first_stacked="left", mso_show=true, mso_support=true) %}
+  {# Used to display 2 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+
+  {% set left_col %}
+    <td class="stacked-col left-col" width="{{ left_width }}" background="{{ left_bg }}" style="{{ 'direction: ltr' if first_stacked|lower == 'right' else '' }}">
+      {% if left_bg and mso_support == true %}
+        <!--[if gte mso 9]>
+          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ left_mso_width|default(left_width) }}px;height:{{ left_mso_height }}px;">
+          <v:fill type="tile" src="{{ left_mso_bg|default(left_bg) }}" color="{{ left_bg_color }}" />
+          <v:textbox inset="0,0,0,0">
+        <![endif]-->
+      {% endif %}
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        {% for content in left_contents %}
+          {{ content }}
+        {% else %}
+          {{ left_contents }}
+        {% endfor %}
+      </table>
+      {% if left_bg and mso_support == true %}
+        <!--[if gte mso 9]>
+          </v:textbox>
+          </v:rect>
+        <![endif]-->
+      {% endif %}
+    </td>
+  {% endset %}
+
+  {% set right_col %}
+    <td class="stacked-col right-col" width="{{ right_width }}" background="{{ right_bg }}" style="{{ 'direction: ltr' if first_stacked|lower == 'right' else '' }}">
+      {% if right_bg and mso_support == true %}
+        <!--[if gte mso 9]>
+          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ right_mso_width|default(right_width) }}px;height:{{ right_mso_height }}px;">
+          <v:fill type="tile" src="{{ right_mso_bg|default(right_bg) }}" color="{{ right_bg_color }}" />
+          <v:textbox inset="0,0,0,0">
+        <![endif]-->
+      {% endif %}
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        {% for content in right_contents %}
+          {{ content }}
+        {% else %}
+          {{ right_contents }}
+        {% endfor %}
+      </table>
+      {% if right_bg and mso_support == true %}
+        <!--[if gte mso 9]>
+          </v:textbox>
+          </v:rect>
+        <![endif]-->
+      {% endif %}
+    </td>
+  {% endset %}
+
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="two-col-stacked {{ class }}" >
+        <table role="presentation" align="center" class="stack" style="{{ 'direction: rtl' if first_stacked|lower == 'right' else '' }}" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            {% if first_stacked == "right" %}
+              {{ right_col }}
+              {{ left_col }}
+            {% else %}
+              {{ left_col }}
+              {{ right_col }}
+            {% endif %}
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro three_column_stacked(col_1_contents, col_2_contents, col_3_contents, spacer_width, class, langs, gamma_condition, col_1_width, col_2_width, col_3_width, table_width, col_1_bg_img, col_1_mso_bg, col_1_mso_width, col_1_mso_height, col_1_mso_bg_color, col_2_bg_img, col_2_mso_bg, col_2_mso_width, col_2_mso_height, col_2_mso_bg_color, col_3_bg_img, col_3_mso_bg, col_3_mso_width, col_3_mso_height, col_3_mso_bg_color, mso_support=true) %}
+  {# Used to display 3 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="three-col {{ class }}" >
+        <table role="presentation" align="center" class="stack" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1" width="{{ col_1_width }}">
+              {% if col_1_bg_img and mso_support == true %}
+                <!--[if gte mso 9]>
+                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ col_1_mso_width }}px;height:{{ col_1_mso_height }}px;">
+                  <v:fill type="tile" src="{{ col_1_mso_bg|default(col_1_bg_img) }}" color="{{ col_1_mso_bg_color }}" />
+                  <v:textbox inset="0,0,0,0">
+                <![endif]-->
+              {% endif %}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+                {% if col_1_bg_img and mso_support == true %}
+                  <!--[if gte mso 9]>
+                    </v:textbox>
+                    </v:rect>
+                  <![endif]-->
+                {% endif %}
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-2" width="{{ col_2_width }}">
+              {% if col_2_bg_img and mso_support == true %}
+                <!--[if gte mso 9]>
+                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ col_2_mso_width }}px;height:{{ col_2_mso_height }}px;">
+                  <v:fill type="tile" src="{{ col_2_mso_bg|default(col_2_bg_img) }}" color="{{ col_2_mso_bg_color }}" />
+                  <v:textbox inset="0,0,0,0">
+                <![endif]-->
+              {% endif %}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+              {% if col_2_bg_img and mso_support == true %}
+                <!--[if gte mso 9]>
+                  </v:textbox>
+                  </v:rect>
+                <![endif]-->
+              {% endif %}
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-3" width="{{ col_3_width }}">
+              {% if col_3_bg_img and mso_support == true %}
+                <!--[if gte mso 9]>
+                  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:{{ col_3_mso_width }}px;height:{{ col_3_mso_height }}px;">
+                  <v:fill type="tile" src="{{ col_3_mso_bg|default(col_3_bg_img) }}" color="{{ col_3_mso_bg_color }}" />
+                  <v:textbox inset="0,0,0,0">
+                <![endif]-->
+              {% endif %}
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_3_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_3_contents }}
+                {% endfor %}
+              </table>
+              {% if col_3_bg_img and mso_support == true %}
+                <!--[if gte mso 9]>
+                  </v:textbox>
+                  </v:rect>
+                <![endif]-->
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro four_column_stacked(col_1_contents, col_2_contents, col_3_contents, col_4_contents, spacer_width, class, langs, gamma_condition, col_1_width, col_2_width, col_3_width, col_4_width, col_1_class, col_2_class, col_3_class, col_4_class, col_1_bgcolor, col_2_bgcolor, col_3_bgcolor, col_4_bgcolor, table_width) %}
+  {# Used to display 3 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="four-col {{ class }}" >
+        <table role="presentation" align="center" class="stack" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1 {{ col_1_class }}" bgcolor="{{ col_1_bgcolor }}" width="{{ col_1_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-2 {{ col_2_class }}" bgcolor="{{ col_2_bgcolor }}" width="{{ col_2_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-3 {{ col_3_class }}" bgcolor="{{ col_3_bgcolor }}" width="{{ col_3_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_3_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_3_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-4 {{ col_4_class }}" bgcolor="{{ col_4_bgcolor }}" width="{{ col_4_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_4_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_4_contents }}
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro five_column_stacked(col_1_contents, col_2_contents, col_3_contents, col_4_contents, col_5_contents, spacer_width, class, langs, gamma_condition, col_1_width, col_2_width, col_3_width, col_4_width, col_5_width, table_width) %}
+  {# Used to display 3 columns of elements.
+    Arguments:
+      col_1_contents: String or Sequence. The content to be displayed in the first column.
+      col_2_contents: String or Sequence. The content to be displayed in the second column.
+      spacer_width: String. The amount of space between the two columns.
+      col_1_width: String. The width of column one.
+      col_2_width: String. The width of column two.
+      width: String. Total width of the table.
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+    <tr>
+      <td class="five-col {{ class }}" >
+        <table role="presentation" align="center" class="stack" width="{{ table_width }}" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="col-1" width="{{ col_1_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_1_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_1_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-2" width="{{ col_2_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_2_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_2_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-3" width="{{ col_3_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_3_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_3_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-4" width="{{ col_4_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_4_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_4_contents }}
+                {% endfor %}
+              </table>
+            </td>
+            {% if spacer_width != "" %}
+              <td class="h-spacer-fixed {{spacer_class}} desktop" width="{{ spacer_width }}">
+                <img src="{{ img_spacer }}" class="{{ spacer_class }} desktop" height="1" width="{{ spacer_width }}" alt="" />
+              </td>
+            {% endif %}
+            <td class="col-5" width="{{ col_5_width }}">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                {% for content in col_5_contents %}
+                  {{ content }}
+                {% else %}
+                  {{ col_5_contents }}
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}
+
+{% macro freemarker(code, langs, link, gamma_condition, class) %}
+  {# Used to create a semantic text element
+    Arguments:
+      code: String. The text to be output inside the <td></td>. Handy for using logo snippets that return entire <img> tags
+      class: String. Adds this value to the class="" attribute of the containing <td>.
+      link: String. Adds a link & outputs value to the href="" attribute, if defined. <a> tag is not added if this argument is empty/undefined.
+      langs: Sequence. Element will only show if the current language is included in this sequence. If blank/undefined, element will show for all lanaguges.
+      gamma_condition: String. Outputs this value into the Freemarker <#if> below.
+  #}
+  {% set lang_var = "'" ~ env.language.short_name|lower ~ "'" %}
+  {% if langs %}
+    <#if {{ langs|lower }}?seq_contains({{ lang_var }})>
+  {% endif %}
+  {% if gamma_condition %}
+    <#if {{ gamma_condition }}>
+  {% endif %}
+  <tr>
+    <td class="copy {{ class }}">
+      {% if link %}
+        <a href="{{ link }}">
+      {% endif %}
+      {{ code }}
+      {% if link %}
+        </a>
+      {% endif %}
+    </td>
+  </tr>
+  {% if gamma_condition %}
+    </#if>
+  {% endif %}
+  {% if langs %}  
+    </#if>
+  {% endif %}
+{% endmacro %}

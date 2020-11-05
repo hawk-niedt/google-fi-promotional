@@ -22,10 +22,6 @@
   <#return "[view_in_browser]">
 </#function>
 
-<#function html_lang lang_code="">
-  <#return "en-us">
-</#function>
-
 <#assign gamma_lib = "{\"campaignId\":\"1\", \"var_num\":4, \"messageId\":2, \"text\":\"bla bla\"}">
 <#assign gamma = gamma_lib?eval>
 

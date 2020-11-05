@@ -24,3 +24,15 @@
 {%- block amp %}
   {# Add amp <script> tags here #}
 {%- endblock %}
+
+{%- block email_partials %}
+
+{# Note: Remove this SET and FOR loop if you are not using mod library macros for your build #}  
+  {% set contents = [
+
+  ] %}
+  
+  {% for content in contents %}
+    {{ content }}
+  {% endfor %}
+{%- endblock %}

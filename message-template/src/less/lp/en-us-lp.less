@@ -1,17 +1,64 @@
-/**************** GLOBAL VS LOCAL LESS *****************
-  *                                                       *
-  * Important note: When importing files in LESS you will need to add a prefix to the file path depending on whether you are importing from the global or local `less` folder.
-  *
-  * If importing styles from the global folder add the prefix './../' to the file path.   
-      For example: './../assets/less/base_styles.less'
+// Landing page styles
+@font-family: "Roboto", Helvetica, Arial, san-serif;
+html, body { 
+    margin: 0; 
+    height: 100%;
+    width: 100%;
+}
+div { width: 100%; }
 
-  * If importing styles from a local folder you do NOT need the file path and only the prefix './' is required.
-      For example: './base_styles.less'
-  *
-*/
+#wrapper { min-height: 100%;  background: #f3f3f3;}
 
-/* NOTE: uncomment this line if you want to use base_styles.less as a base for your LP styles
-  @import './../assets/less/base_styles.less';
-*/
+#top-header { 
+    text-align: center;
+    background: #ffffff;
+    height: 90px;
+}
+    
+#content { padding: 0 0 0px; }
+.fluid { 
+    -premailer-align: center;
+    text-align: center;  
+    background: #f3f3f3;
+    height: 100%; 
+    min-height: 400px;}
+    
+#sticky-bottom { position: relative; }
 
-// LANDING PAGE CSS
+.footer-blue { 
+    -premailer-align: center;
+    text-align: center;
+    background: #448BFF;
+    position: absolute;
+    bottom: 100%;
+    min-height: 100px;
+}
+
+.div-blue { 
+    -premailer-align: center;
+    text-align: center;  
+    background: #448BFF;
+    height: 90px;
+}
+  
+.headline{
+ font-family: @font-family;
+ color: #444444;
+ display: inline-block;
+ font-size: 50px;
+ line-height: 53px;
+ font-weight: 300;
+ text-align: center;
+}
+
+.footer{
+ font-family: @font-family;
+ color: #ffffff;
+ font-size: 12px;
+ line-height: 14px;
+ font-weight: 300;
+ text-align: left;
+ a {
+   color: #ffffff !important;
+ }
+} 

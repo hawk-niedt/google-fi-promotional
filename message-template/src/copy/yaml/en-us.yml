@@ -1,5 +1,52 @@
+# Google Pixel(Floral) Welcome
 from: 'Google Pixel <googlepixel-noreply@google.com>'
 subject: >-
-  Subject
-page_title: 'Page title - update in your copy file'
-lp_page_title: 'LP title - update in your copy file'
+  <#if FirstName?? && FirstName?has_content && FirstName?length gt 1>${FirstName?capitalize}, w<#else>W</#if>elcome to your new Pixel
+preview_copy: '<#if EmailAddress??>Get started in 3 easy steps.</#if>[=]<strong>split</strong>[=]test'
+page_title: 'Empty email page title, add to your copy file'
+mod1_headline: 'Welcome to the most <br/>helpful Pixel yet.'
+mod1_subhead: >-
+  Get the most out of your new Pixel 4 <br/>right from day one. Start with these quick <br/>pointers for finding apps, using gestures, <br/>and more.
+mod2_headline: 'Hear it first.'
+mod2_subhead: >-
+  Stay up to date on Google hardware <span class="mobile"><br/></span>products and related features, services, <span class="mobile"><br/></span>and offers. <span class="desktop"><br/></span>Plus, get invitations to help <span class="mobile"><br/></span>improve Google hardware products and <span class="mobile"><br/></span>related&nbsp;services.
+mod2_cta: 'Sign up now'
+mod3_headline: 'Helpful tips, taps away.'
+mod3_subhead:
+  - Explore our handy videos to learn how to <br/>silence your phone, customize notifications, <br/>use your Google Assistant&sup1;, and more.
+  - Watch tips right on your Pixel:<br/><strong>Settings > Tips & Support > Explore Pixel Tips</strong>
+mod3_cta: <a href="${track('https://youtube.com', 'YouTube')}">Watch tips on YouTube</a>
+mod4_tips:
+  - Beginner basics
+  - Organize your home screen
+  - Lock and unlock phone
+  - Connect to Wi-Fi Networks
+  - Charge your phone
+  - Turn your location on and off
+  - Face unlock
+  - Set up and transfer data
+  - Switch to Messages
+mod4_headline: 'More Pixel quick tips.'
+mod5_headline: 'Find the apps you <br/>know and love.'
+mod5_subhead: Visit the Google Play store for your <br/>favorite apps, games, movies, TV, <br/>books, magazines, music, and more.
+mod5_cta: 'Find your apps'
+mod6_headline: 'Pay the easy way.'
+mod6_subhead: >-
+  Whether you're online or in-store, <span class="mobile"><br/></span>Google Pay on <span class="desktop"><br/></span>your Pixel makes <span class="mobile"><br/></span>checking out quick&nbsp;and&nbsp;secure.
+mod6_cta: 'Open Google Pay'
+gstore_headline: 'One whole family, built to help you do more.'
+gstore_subhead: >-
+  Shop now or get expert advice if <span class="mobile"><br/></span>you need help deciding. <span class="mobile"><br/><br/></span><strong>Call us at 1 (8&#65279;33) 52&#65279;9-664&#65279;4.</strong>
+gstore_cta: 'Visit Google Store'
+support_headline: We're here to help, 2&#65279;4&#65279;/&#65279;7.
+support_cta:
+  - Call
+  - Chat
+  - Get answers
+hats_headline: 'Was this email helpful?'
+disclaimer:
+  - '&sup1; Requires internet connection.'
+  - '&sup2; PLACEHOLDER COPY'
+  - '&sup3; PLACEHOLDER COPY'
+google_address: &copy; ${.now?string('yyyy')} G&#65279;oo&#65279;gle L&#65279;LC<br />16&#8203;0&#65279;0 A&#65279;m&#65279;p&#65279;h&#65279;ith&#8203;eatre Park&#8203;way,<br />Moun&#8203;tain Vie&#8203;w, CA 94&#8203;043
+optout: 'You are receiving this welcome message because you recently activated your Google account on a&nbsp;Pixel.'

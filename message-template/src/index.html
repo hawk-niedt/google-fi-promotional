@@ -21,8 +21,29 @@
 
 {# freemarker #}
 {%- block freemarker %}
+  {%- include 'assets/partial/links.ftl' %}
   {#
     {%- include 'message-template/src/partial/links.ftl' %}
     You can include message-specific link partials here. Replace 'message-template' with your message folder name.
   #}
+{%- endblock %}
+
+{%- block email_partials %}
+
+{# Note: Remove this SET and FOR loop if you are not using mod library macros for your build #}  
+  {% set contents = [
+
+    base.comment("!-------------- Add social and HATS sections here -------------!"),
+      base.spacer("8"),
+      base.text(disclaimer, element="h6"),
+      base.spacer("11"),
+      base.text(google_address, element="h6"),
+      base.spacer("11"),
+      base.text(optout, element="h6", class="optout")
+  ] %}
+  
+  {% for content in contents %}
+    {{ content }}
+  {% endfor %}
+
 {%- endblock %}

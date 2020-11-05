@@ -1,10 +1,13 @@
 <#compress>
-<#include '/gkmsid/10066901' ignore_missing=true /> {# HTML Lang #}
 {%- block freemarker %}
 {%- endblock %}
+<#include '/gkmsid/9877999' ignore_missing=true /> {# lpage #}
+<#include '/gkmsid/9882423' ignore_missing=true /> {# footer address #}
+<#include '/gkmsid/9326626' ignore_missing=true /> {# lpage #}
 {% if env.content_type|lower != 'amp' %}
+{# GMKS snippets #}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html lang="${html_lang('{{ env.language.short_name }}')}">
+  <html lang="${html_lang('{{ env.language.short_name }}')}">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=yes,initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0" />
@@ -41,7 +44,36 @@
  </head>
 {% endif %}
   <body>
-    
+    {%- block preview %}
+      {%- if preview_copy and preview_copy != "" %}
+        <div style="display:none; font-size:0; height:0; line-height:0; mso-line-height-rule:exactly; width:0px" height="0" width="0">{{ preview_copy }}</div>
+        <div style="display: none; max-height: 0px; overflow: hidden;">{% for i in range(0, 126) %}&nbsp;&zwnj;{% endfor %}</div>
+      {%- endif %}
+    {% endblock %}
+    <section>
+      <!-- Email Container -->
+      <table id="email-container" role="presentation" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="100%" style="padding:0">
+            {%- block email_content %}
+              Use ./sublayout.html  
+            {%- endblock email_content %}  
+          </td>
+        </tr>
+      </table>
+      <!-- /Email Container end-->
+      {%- block gmail_fix %}
+        <table role="presentation" id="gmail-fix-ios" class="" style="border:0; border-collapse:collapse; margin:0 auto" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="font-size:1px; line-height:1px; padding:0;"><img src="http://www.gstatic.com/gmktg/dub-img/1x1_transparent.png" height="1" width="90" alt="" ></td>
+            <td style="font-size:1px; line-height:1px; padding:0;"><img src="http://www.gstatic.com/gmktg/dub-img/1x1_transparent.png" height="1" width="90" alt="" ></td>
+            <td style="font-size:1px; line-height:1px; padding:0;"><img src="http://www.gstatic.com/gmktg/dub-img/1x1_transparent.png" height="1" width="90" alt="" ></td>
+            <td style="font-size:1px; line-height:1px; padding:0;"><img src="http://www.gstatic.com/gmktg/dub-img/1x1_transparent.png" height="1" width="90" alt="" ></td>
+            <td class="show-gmail" style="font-size:1px; line-height:1px; padding:0;display: none"><img src="http://www.gstatic.com/gmktg/dub-img/1x1_transparent.png" height="1" width="30" alt="" ></td>
+          </tr>
+        </table>
+      {% endblock gmail_fix %}
+    </section>
   </body>
 </html>
 </#compress>

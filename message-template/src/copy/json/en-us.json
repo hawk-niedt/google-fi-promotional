@@ -1,0 +1,22 @@
+{
+  "from_address": "LCS Marketing Automation Team <lcs-marketing-automation@google.com>",
+  "edu_subhead": "Your optimization score is an estimate of how well your Google Ads account is set to perform. A top score means the account can maximize performance. To see your score and optimization recommendations, visit your account's <strong>Recommendations page</strong> in the Google&nbsp;Ads experience.&sup1; Watch this three minute <a href=\"${edu_link}\">video</a> to learn how using your optimization score can improve&nbsp;performance.&sup2;",
+  "edu_headline": "About optimization score",
+  "header_logo_alt": "Google Ads",
+  "headline_1": "<#if max_uplift_for_the_sugg_in_div &lt; 2.0 >Pause underperforming keywords and improve your optimization score<#else>Pause underperforming keywords and raise your optimization score by up to&nbsp;${max_uplift_for_the_sugg_in_div?string[\"0.#\"]}%</#if>",
+  "cta_localized": "Review",
+  "cta": "Review & Apply",
+  "blurb_title": "Keyword pausing",
+  "opportunity_name": "KEYWORD PAUSING",
+  "sl_1": "<#if (num_cids_in_email?number &gt; 1)>Conserve your budget by pausing underperforming keywords in ${num_cids_in_email} accounts<#else>Conserve your budget by pausing underperforming keywords in ${account_name}</#if>",
+  "opportunity_blurb_1": "<#if (num_cids_in_email?number &gt; 1)>Pause keywords that perform poorly compared to others in the same ad group. By investing only in your strongest keywords, you can improve your optimization score. Below are your accounts that could benefit from pausing keywords. With two clicks you can review and apply these opportunities directly in each&nbsp;account. <#else>Pause keywords that perform poorly compared to others in the same ad group. By investing only in your strongest keywords, you can improve your optimization score. Below is an account that could benefit from pausing keywords. With two clicks you can review and apply these opportunities directly in your&nbsp;account. </#if>",
+  "sign_off": "Cheers,",
+  "headlines": [
+    "headline 1",
+    "headline 2",
+    "headline 3"
+  ],
+  "legal_copy": "&sup1; Legal copy 1.<br /><br />&sup2; Legal copy 2.",
+  "google_address": "&copy; ${.now?string('yyyy')} G&#65279;oo&#65279;gle L&#65279;LC<br />16&#8203;0&#65279;0 A&#65279;m&#65279;p&#65279;h&#65279;ith&#8203;eatre Park&#8203;way,<br />Moun&#8203;tain Vie&#8203;w, CA 94&#8203;043",
+  "optout": "If you would prefer to opt out of these emails, please let me know."
+}

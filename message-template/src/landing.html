@@ -1,13 +1,72 @@
-<!-- add landing_page content here -->
+{%- macro break(height,colspan) %} {# is this necessary in this file? #}
+<tr><td  style="font-size:{{ height }}px;line-height:{{ height }}px" colspan="{{ colspan|default('1') }}" height="{{ height }}">&nbsp;</td></tr>
+{% endmacro -%}
+
+{%- set gum = "https://services.google.com/fh/files/emails/" -%}
+{%- set presto_logo = gum ~ "google_g_pixel_logo_2x_77x29.png" -%}
+{% set img_spacer ="https://www.gstatic.com/gmktg/mtv-img/spacer.png" %}
+
+{%- block freemarker %}
+  {%- include 'assets/partial/links.ftl' %}
+  {# add message-level links here #}
+{%- endblock %}
+
+<#include '/gkmsid/9326626' ignore_missing=true />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html lang="${html_lang('{{ env.language.short_name }}')}" xmlns:v="urn:schemas-microsoft-com:vml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, user-scalable=yes,initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0" />
     <title>{{ lp_page_title }}</title>
-    <link href="en-us-lp.css" rel="stylesheet" />
+    <link href="en-us-lp.css" rel="stylesheet" /> 
   </head>
-  <body>    
-    ADD LANDING PAGE CONTENT
+  <body>
+    <div id="wrapper">
+      <div id="top-header">
+        <table align="center" width="100%">
+          {{ break(22,3) }}
+         
+      <tr>
+        <td class="masthead" align="center"> {# replace with redwood snippet #}
+          <a href="https://store.google.com/category/phones"><@img_pixel_mod_lib /></a> 
+        </td> 
+      </tr>
+
+    
+        </table>
+      </div>
+      <div id="content">
+        <div class="fluid">
+          <table align="center" width="100%" heoght="100%"bgcolor="#f3f3f3">
+            <tr>
+              <td>
+                <table align="center" bgcolor="#f3f3f3" height="100%">
+                  {{ break(96) }}
+                  <tr>
+                    <td class="headline" align="center">{{ lp_thank_you }}</td>
+                  </tr>
+                  {{ break(96) }}
+                </table>
+              </td>
+            </tr>
+          </table> 
+        </div>
+      </div>
+    </div> {# /wrapper #}
+    <div id="sticky-bottom">
+      <div class="footer-blue">
+        <div class="div-blue">
+          <table align="left" width="100%">
+            {{ break(30,3) }}
+            <tr>
+              <td width="100"></td>
+              <td align="left" class="footer" style="text-align:left;">{{ lp_footer }}</td>
+              <td width="100"></td>
+            </tr>
+            {{ break(30,3) }}
+          </table>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

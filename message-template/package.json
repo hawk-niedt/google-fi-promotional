@@ -10,13 +10,10 @@
     "dev": "npm run watch:html & npm run watch:less",
     "start": "echo export 'JAVA_HOME=$(/usr/libexec/java_home)' >> ~/.bash_profile && npm install",
     "build": "gulp clear-build && gulp less && gulp less-lp && node build.js  && gulp render-fm && gulp build-html-preview && gulp build-pt-preview && gulp render-nofm && gulp build-html && gulp build-pt",
-    "build-g": "gulp clear-build && gulp less && gulp less-lp && node build.js  && gulp render-nofm && gulp build-html && gulp build-pt",
     "build-amp": "gulp clear-build && gulp less && node build.js && gulp render-amp && gulp build-amp-preview && gulp render-amp-nofm && gulp build-amp",
     "preview": "node preview.js",
     "export": "gulp export",
-    "create-json": "gulp create-json",
-    "create-yaml": "gulp create-yaml",
-    "parse-arb": "gulp convert-arb"
+    "json": "gulp json"
   },
   "keywords": [],
   "author": "",

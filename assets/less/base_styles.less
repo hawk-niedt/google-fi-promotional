@@ -1,0 +1,624 @@
+// precompiled styles
+
+/* INITAL STYLES BEFORE MEDIA QUERY SWITCH - SET FOR DEKSTOP */
+/*
+TO SAVE CODE IN RESPONSIVE DESIGN:
+- DO NOT USE ANY PREMAILER.
+- DO NOT INCLUDE ANY LONG CSS ON ANY TD LEVEL.
+- USE FONT-FAMILY ON THE CLASS LEVEL AVOID THE TD SELECTOR. 
+- REMOVE SPACES AT THE BEGINNING OR END OF { } IN CLASSES.
+- MANUALLY ADD cellpadding="0" cellspacing="0" TO EACH TABLE IN YOUR HTML.
+- IF YOU CAN, TRY USING 4 WAY PADDING IN MOBILE (LESS HTML) vs VERTICAL SPACES NEEDED FOR OUTLOOK DESKTOP.
+*/
+
+// temporary masthead fix
+// this padding (line 21) was added as an a11y fix for logos that do not have enough clickable space.
+// If the logo you're using is at least 48px tall, remove this padding in your message-level styles.
+.masthead {
+  padding: 0;
+  a {
+    display: inline-block;
+    padding: 14px 0;
+  }
+}
+//
+
+@font-gsense: 'Google Sans',Roboto,sans-serif,Arial;
+@border-box: 1px solid #dfdfdf;
+@document-color: #666666;
+@document-font: @font-gsense;
+@text-white: #ffffff;
+@button-blue: #1A73E8; // a11y updated, "Google Blue 600"
+@text-blue: #1967D2; // a11y updated, "Google Blue 700"
+@text-black: #202124;
+@text-dark-gray: #666666;
+@text-light-gray: #999999;
+
+/* TYPOGRAPHY MUST BE INITIALIZED FROM SKETCH */
+@font-size-h1: 24px;
+@line-height-h1: 30px;
+@text-color-h1 : @document-color;
+@font-size-h2: 20px;
+@line-height-h2: 26px;
+@text-color-h2 : @document-color;
+@font-size-h3: 15px; 
+@line-height-h3: 20px; 
+@text-color-h3 : @document-color;
+@font-size-h4: 20px;
+@line-height-h4: 26px;
+@text-color-h4 : @document-color;
+@font-size-h5: 14px; // updated to "body" 14/22, previously 12/18
+@line-height-h5: 22px; // updated to "body" 14/22, previously 12/18
+@text-color-h5 : @document-color;
+@font-size-h6: 8px;
+@line-height-h6: 11px;
+@text-color-h6 : @document-color;
+@font-size-p: 14px;
+@line-height-p: 22px;
+@font-size-query: 14px;
+@line-height-query: 20px;
+
+/* THIS MESSAGE BUTTONS RESETS */
+/* Covers all styles (outline-blue, outline-white, solid-blue, solid-white) */
+@font-size-button-primary: 16px;
+@line-height-button-primary: 22px;
+@top-padding-button-primary: 13px;
+@left-right-padding-button-primary: 20px;
+
+@font-size-button-secondary: 14px;
+@line-height-button-secondary: 22px;
+@top-padding-button-secondary: 5px;
+@bottom-padding-button-secondary: 6px;
+@left-right-padding-button-secondary: 17px;
+@top-spacer-button-secondary: 6px;
+@bottom-spacer-button-secondary: 5px;
+
+/* MOBILE FONTS RESPONSIVE ADJUSTMENT */
+// % by which font sizes should be adjusted for Gmail app
+@android-gmail-mult: 0.92;
+// % by which font sizes should be adjusted for iOS Gmail app
+@ios-gmail-mult: 0.95; 
+
+/* DESKTOP vs MOBILE WIDTHS */
+@outer-container-width: 720px;
+@desktop-width: 720px;
+@mobile-width: 360px;
+
+/* global styles */
+
+body {
+  font-family: @document-font;
+  font-size: 0;
+  color: @document-color;
+  background-color: #ffffff;
+  padding: 0;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+table {
+  border-collapse: collapse;
+  // table-layout: auto;
+  margin: 0 auto;
+}
+
+/* a {color: #4285F4; text-decoration: none;} */
+/** 
+ * a11y updated (text links need to be #1967D2 per slide 10, 12:https://docs.google.com/presentation/d/18OiYtPJMPjFMTQuZtA_XCFWyCmfaR4w0t_Jc1CmrAXk/edit?ts=5f1b72cf#slide=id.g8b40bdbc81_0_1 
+ */
+a {color: #1967D2; text-decoration: none;} 
+img {border: none; outline: none; display: block;}
+
+p, h1, h2, h3, h4, h5, h6  {
+  font-weight: normal;
+  margin: 0;
+}
+
+strong, .bold {
+  p, h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+  }
+}
+
+.medium {
+  p, h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+  }
+}
+
+// helpers
+
+.center {
+  text-align: center;
+}
+
+img.center,
+div.center,
+table.center {
+ margin: 0 auto;
+}
+
+.left {
+  text-align: left !important;
+}
+
+.right {
+  text-align: right !important;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.pad-left-30 {
+  padding-left: 30px;
+}
+
+.italic {
+  font-style: italic;
+  p, h1, h2, h3, h4, h5, h6 {
+    font-style: italic;
+  }
+}
+
+.unstyle-link,
+.unstyle-link a {
+  text-decoration: none;
+  color: @document-color !important;
+  font-size: inherit;
+  line-height: inherit;
+  cursor: text;
+  pointer-events: none;
+}
+
+.unstyle-link-2,
+.unstyle-link-2 a {
+  text-decoration: none;
+  color: @text-blue;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.container {width: @outer-container-width; margin: 0 auto; }
+.desktop-size {width: @desktop-width;padding: 0px; margin: 0 auto;}
+.mobile-size {width: @mobile-width;max-width: @mobile-width;padding: 0px;margin: 0 auto;}
+.email-container { .desktop-size; }
+
+.mobile {display: none;}
+span.mobile {display: none; font-size: 0; line-height: 0;}
+
+// layout elements
+
+.preview {
+  display: none;
+  font-size: 0;
+  line-height: 0;
+  height: 0;
+}
+
+.masthead { // this padding was added as an a11y fix for logos that do not have enough clickable space. If the logo you're using is at least 48px tall, remove this padding in your message-level styles.
+  padding: 14px 0; 
+  text-align: center;
+}
+
+.support {
+  .copy {
+    // white-space: nowrap;
+    h5 {
+      // white-space: nowrap;
+    }
+  }
+}
+
+.footer {
+  .copy {
+    padding: 0 100px;
+    &.optout {
+      padding: 0 75px; // per Factor design optout has a wider copy
+    }
+  }
+}
+
+#ios-gmail-fix {
+  text-align: center;
+  td {
+   color: #ffffff;
+   white-space: nowrap;
+   font-size: 14px;
+   text-align: center;
+  }
+}
+
+.gmail-fix td {
+  font-size: 0;
+  line-height: 0;
+}
+
+// macro elements
+
+.module {
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: 100%;
+}
+
+// text styles
+
+.copy {
+  font-family: @document-font;
+  text-align: center;
+  &.left {
+    text-align: left;
+  }
+  &.right {
+    text-align: right;
+  }
+}
+
+h1 {
+  color: @text-color-h1;
+  font-size: @font-size-h1;
+  line-height: @line-height-h1;
+}
+h2 {
+  color: @text-color-h2;
+  font-size: @font-size-h2;
+  line-height: @line-height-h2;
+}
+h3 {
+  color: @text-color-h3;
+  font-size: @font-size-h3;
+  line-height: @line-height-h3;
+}
+h4 {
+  color: @text-color-h4;
+  font-size: @font-size-h4;
+  line-height: @line-height-h4;
+}
+h5 {
+  color: @text-color-h5;
+  font-size: @font-size-h5;
+  line-height: @line-height-h5;
+}
+h6 {
+  color: @text-color-h6;
+  font-size: @font-size-h6;
+  line-height: @line-height-h6;
+}
+p {
+  color: @text-dark-gray;
+  font-size: @font-size-p;
+  line-height: @line-height-p;
+}
+
+.text-query {
+  p {
+    font-size: @font-size-query;
+    line-height: @line-height-query;
+  }
+}
+
+.blue {
+  h1, h2, h3, h4, h5, h6, p {
+    color: @text-blue;
+  }
+}
+
+.white {
+  h1, h2, h3, h4, h5, h6, p, a {
+    color: @text-white;
+  }
+}
+
+// buttons
+.button {
+  // default button styles: solid blue, primary
+  font-family: @document-font;
+  a.spacer-top,
+  a.spacer-bottom {
+    display: block;
+    height: 0px;
+    font-size: 0px;
+    line-height: 0px;
+  }
+  a.visible {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: @button-blue;
+    border: 2px solid @button-blue;
+    mso-border-alt: none;
+    color: @text-white;
+    font-size: @font-size-button-primary;
+    line-height: @line-height-button-primary;
+    padding: @top-padding-button-primary @left-right-padding-button-primary; //default button height (via padding) to primary
+    text-align: center;
+    font-weight: 500;
+  }
+  &.primary {
+    a.visible {
+      font-size: @font-size-button-primary;
+      line-height: @line-height-button-primary;
+      padding: @top-padding-button-primary @left-right-padding-button-primary;
+    }
+  }
+  &.secondary {
+    a.spacer-top {
+      height: @top-spacer-button-secondary;
+      font-size: @top-spacer-button-secondary;
+      line-height: @top-spacer-button-secondary;
+    }
+    a.spacer-bottom {
+      height: @bottom-spacer-button-secondary;
+      font-size: @bottom-spacer-button-secondary;
+      line-height: @bottom-spacer-button-secondary;
+    }
+    a.visible {
+      font-size: @font-size-button-secondary;
+      padding: @top-padding-button-secondary @left-right-padding-button-secondary @bottom-padding-button-secondary;
+    }
+  }
+  &.solid-blue {
+    a.visible {
+      background-color: @button-blue;
+      color: @text-white;
+    }
+  }
+  &.outline-blue {
+    a.visible {
+      background-color: @text-white;
+      color: @text-blue;
+    }
+  }
+  &.outline-white {
+    a.visible {
+      background-color: none;
+      border-color: @text-white;
+      color: @text-white;
+    }
+  }
+  &.full-width > table {
+    width: 100%;
+  }
+}
+
+// rounded queries
+.query {
+  background-color: #E0E0E0;
+  border-radius: 11px;
+  box-sizing: border-box;
+  color: #212121;
+  //display: inline-block;
+  font-family: @document-font;
+  font-size: @font-size-query;
+  line-height: @line-height-query;
+  padding: 9px 16px;
+  mso-padding-alt: 6px 16px 10px;
+  text-align: left;
+  &.center {
+    text-align: center;
+  }
+}
+
+// Gstore
+.gstore {
+  .chevron {
+    vertical-align: middle;
+    &.mobile {
+      display: none;
+      width: 0;
+    }
+    img.chev-gray,
+    img.chev-white {
+      display: inline-block;
+      padding-left: 3px;
+      width: 6px;
+      height: 10px;
+    }
+  }
+}
+
+// Desktop
+@media only screen and (min-width: 622px) {
+  .container {
+    .desktop-size;
+  }
+}
+
+// Mobile
+@media only screen and (max-width: 621px), // this should work on all mobile devices except Samsung
+only screen and (min-width: 360px) and (max-width: 767px) /* Samsung support */ {
+  .desktop {display: none !important; height: 0 !important; font-size: 0 !important; line-height: 0 !important;}
+  img.mobile {display: block !important; height: auto !important;}
+  table.mobile {display: table !important;}
+  tr.mobile {display: table-row !important;}
+  td.mobile {display: table-cell !important;}
+  span.mobile {display: inline !important; font-size: inherit !important; line-height: inherit !important;}
+  
+  .container {
+    width: @mobile-width !important;
+    max-width: @mobile-width !important;
+  }
+  
+  .module {
+    width: 100%;
+  }
+  
+  .two-column-stack {
+    .left-col,
+    .right-col {
+      float: none;
+      width: 100%;
+    }
+  }
+  
+  // stackable cols
+  .stack {
+    width: 360px;
+    .col-1,
+    .col-2,
+    .col-3,
+    .col-4,
+    .col-5,
+    .stacked-col {
+      width: 100%;
+      display: block;
+    }
+  }
+  
+  .bold {
+    p, h1, h2, h3, h4, h5, h6 {
+      font-weight: 700;
+    }
+  }
+  
+  // Gstore
+  .gstore {
+    .chevron {
+      &.desktop {
+        display: none !important;
+      }
+      &.mobile {
+        display: inline-block !important;
+      }
+      img.chev-white {
+        display: inline-block !important;
+        padding-left: 3px !important;
+        width: 6px !important;
+        height: 10px !important;
+      }
+    }
+  }
+  
+  .footer {
+    .copy {
+      padding: 0 20px !important;
+    }
+  }
+}
+
+/* Device specific MQs */
+
+/* ANDROID PHONES */
+@media only screen and (device-width: 412px) and (orientation: portrait),  /* Pixel 1, 2, 3XL */
+  only screen and (device-width: 393px) and (orientation: portrait), /* Pixel 3 */
+  only screen and (device-width: 360px) and (orientation: portrait) /* Samsung & Sony */ {
+  // visual fixes (not text/font fixes)
+  /*.button {
+    & > table > tr > td a {
+      padding-top: 13px;
+      padding-bottom: 14px;
+    }
+    &.outline > table > tr > td a {
+      padding-top: 13px;
+      padding-bottom: 12px;
+    }
+  }*/
+  // fixes whitespace gaps on side of hero images
+  .full-width {
+    img {
+      width: 100%;
+    }
+  }
+  // MODULAR FONTS ADJUST FOR GMAIL APPS
+  h1 {
+    font-size: @font-size-h1 * @android-gmail-mult;
+    line-height: @line-height-h1 * @android-gmail-mult;
+  }
+  h2 {
+    font-size: @font-size-h2 * @android-gmail-mult;
+    line-height: @line-height-h2 * @android-gmail-mult;
+  }
+  h3 {
+    font-size: @font-size-h3 * @android-gmail-mult;
+    line-height: @line-height-h3 * @android-gmail-mult;
+  }
+  h4 {
+    font-size: @font-size-h4 * @android-gmail-mult;
+    line-height: @line-height-h4 * @android-gmail-mult;
+  }
+  h5 {
+    font-size: @font-size-h5 * @android-gmail-mult;
+    line-height: @line-height-h5 * @android-gmail-mult;
+  }
+  h6 {
+    font-size: @font-size-h6 * @android-gmail-mult;
+    line-height: @line-height-h6 * @android-gmail-mult;
+  }    
+  p {
+    font-size: @font-size-p * @android-gmail-mult;
+    line-height: @line-height-p * @android-gmail-mult;
+  }
+  .button a > div  {
+    font-size: @font-size-button-primary *  @android-gmail-mult; // per Factor request
+    line-height: @line-height-button-primary *  @android-gmail-mult; // per Factor request
+  }
+  .button.secondary a > div  {
+    font-size: @font-size-button-secondary *  @android-gmail-mult; // per Factor request
+    line-height: @line-height-button-secondary *  @android-gmail-mult; // per Factor request
+  }
+  .query td {
+    font-size: @font-size-query * @android-gmail-mult;
+    line-height: @line-height-query * @android-gmail-mult;
+  }
+  .text-query p {
+    font-size: @font-size-query * @android-gmail-mult;
+    line-height: @line-height-query * @android-gmail-mult;
+  }
+}
+
+// covers ALL iphones
+@media 
+only screen and (device-width:320px) and (orientation:portrait),
+only screen and (device-width:375px) and (orientation:portrait),
+only screen and (device-width:414px) and (orientation:portrait),
+only screen and (min-device-width:319px) and (max-device-width:321px),
+only screen and (min-device-width:374px) and (max-device-width:376px),
+only screen and (min-device-width:413px) and (max-device-width:415px) {
+  
+  // native app styles here
+  
+  // font size fixes for iOS Gmail app
+  u + .body {
+    h1 {
+      font-size: @font-size-h1 * @ios-gmail-mult;
+      line-height: @line-height-h1 * @ios-gmail-mult;
+    }
+    h2 {
+      font-size: @font-size-h2 * @ios-gmail-mult;
+      line-height: @line-height-h2 * @ios-gmail-mult;
+    }
+    h3 {
+      font-size: @font-size-h3 * @ios-gmail-mult;
+      line-height: @line-height-h3 * @ios-gmail-mult;
+    }
+    h4 {
+      font-size: @font-size-h4 * @ios-gmail-mult;
+      line-height: @line-height-h4 * @ios-gmail-mult;
+    }
+    h5 {
+      font-size: @font-size-h5 * @ios-gmail-mult;
+      line-height: @line-height-h5 * @ios-gmail-mult;
+    }
+    h6 {
+      font-size: @font-size-h6 * @ios-gmail-mult;
+      line-height: @line-height-h6 * @ios-gmail-mult;
+    }
+    p {
+      font-size: @font-size-p * @ios-gmail-mult;
+      line-height: @line-height-p * @ios-gmail-mult;
+    }
+    strong, .bold {
+      p, h1, h2, h3, h4, h5, h6 {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// fix off centered gmail proof on iphone 8+
+@media only screen and (device-width: 414px) and (orientation: portrait) {
+  .show-gmail {
+    display: table-cell;
+    img {display: block;}
+  }
+}

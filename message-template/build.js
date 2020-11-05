@@ -17,7 +17,7 @@ const csv = require('csvtojson');
  * @ copyDirPath - file path to the copies directory
  */
 const env = Nunjucks.configure(path.resolve(__dirname, './..'), { autoescape: false, trimBlocks: true, lstripBlocks: true });
-// const jsonDirPath = path.resolve(__dirname, './src/copy/json');
+const jsonDirPath = path.resolve(__dirname, './src/copy/json');
 const yamlDirPath = path.resolve(__dirname, './src/copy/yaml');
 
 /**
@@ -25,29 +25,10 @@ const yamlDirPath = path.resolve(__dirname, './src/copy/yaml');
  * @ ptHandler - strips HTML and converts to plain-text format
  * @ splitHandler - clone of EPT copy |split() function
  */
-const ptHandler = function (str, preserveLineBreaks) {
+const ptHandler = function (str) {
   let testUrl, temp1, temp2, cleanurl, pt_cleanurl, mystr = "";
 
-  let superscripts = ['&sup1;', '&sup2;', '&sup3;', '&#8308;', '&#8309', '&#8310', '&#8311', '&#8312', '&#8313'];
-
-  let sup_test = ``;
-
-  superscripts.forEach(sup => {
-    let r = new RegExp(`${sup}`, 'gi')
-    let sup_id = superscripts.indexOf(sup) + 1;
-    let rp = `(${sup_id})`;
-    sup_test += `.replace(${r}, ${JSON.stringify(rp)})`;
-  })
-
-  if (sup_test !== '') {
-    mystr = eval(`${JSON.stringify(str)}${sup_test}`);
-  }
-
-  if (preserveLineBreaks) {
-    mystr = mystr.replace(/<br \/>/g, "\r\n").replace(/\&nbsp\;/g, " ").replace(/\&#xfeff\;/g, "");
-  } else {
-    mystr = mystr.replace(/<br \/>/g, "").replace(/\&nbsp\;/g, " ").replace(/\&#xfeff\;/g, "");
-  }
+  mystr = str.replace(/<br \/>/g, "\r\n").replace(/\&nbsp\;/g, " ").replace(/\&#xfeff\;/g, "");
 
   testUrl = mystr.match(/\bhref=.*?>/i);
   let tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>|<!--[\s\S]*?-->/gi;
@@ -80,7 +61,7 @@ const ptHandler = function (str, preserveLineBreaks) {
     mystr = temp2;
   }
   // Protect freemarker
-  let temp3 = temp2.replace(/<\$\{/gi, "~%").replace(/\}>/gi, "%~").replace(/<#/gi, "~\!").replace(/<\/#/gi, "\!~").replace(/<\@/gi, "q!");
+  let temp3 = temp2.replace(/<\$\{/gi, "~%").replace(/\}>/gi, "%~").replace(/<#/gi, "~\!").replace(/<\/#/gi, "\!~");
 
   // Protect <http
   temp3 = temp3.replace(/<http/gi, "~^");
@@ -89,54 +70,28 @@ const ptHandler = function (str, preserveLineBreaks) {
   let temp4 = temp3.replace(/<[^>]*>/gi, '');;
 
   // Restore protected freemarker and http
-  let temp5 = temp4.replace(/~%/gi, "<${").replace(/%~/gi, "}>").replace(/\~\!/gi, "<#").replace(/\!~/gi, "</#").replace(/~\^/gi, "<http").replace(/q!/gi, "<\@");
+  let temp5 = temp4.replace(/~%/gi, "<${").replace(/%~/gi, "}>").replace(/\~\!/gi, "<#").replace(/\!~/gi, "</#").replace(/~\^/gi, "<http");
 
   return temp5.replace(/track\(/gi, 'track("');
 
-};
-
-const orphanHandler = function (str) {
-  if (!str) {
-    // Skip the filter, if copy is null or not found in any .yml file
-    return str;
-  }
-
-  if (str.toLowerCase().indexOf("nbsp") !== -1) {
-    // Skip the filter, user switched to manual mode
-    return str.replace(/’/gi, "\'");
-  }
-
-  var temp1 = str.replace(/ ([^ ]*\.)/gi, '&nbsp;$1');
-  var temp3 = temp1.replace(/ ([^ ]*\:)/gi, '&nbsp;$1');
-
-  if (temp3.toLowerCase().indexOf("nbsp") === -1) {
-    var temp5 = temp3.replace(/ ([^ ]*)$/, '&nbsp;$1');
-  } else {
-    var temp5 = temp3;
-  }
-
-  return temp5.replace(/’/gi, "\'");
 };
 
 const slFixHandler = function (str, seperator) {
   return str.replace(/\r?\n|\r/g, "").replace(/\t/g, "");
 }
 
+// add multi-line
+env.addFilter('sl_fix', slFixHandler)
+
 const splitHandler = function (str, seperator) {
   return str.split(seperator);
 }
-
-// add multi-line
-env.addFilter('sl_fix', slFixHandler)
 
 // add splitHandler
 env.addFilter('split', splitHandler)
 
 // add ptHandler
 env.addFilter('plain_text', ptHandler);
-
-// add orphanHandler
-env.addFilter('fix_orphan', orphanHandler);
 
 // read the development template data
 const _HTML = fs.readFileSync(path.resolve(__dirname, './src/index.html')).toString();
@@ -152,14 +107,6 @@ const AMP = [];
 const pt = [];
 const langs = [];
 
-// create breadcrumb
-const tree = __dirname.split('/').slice(-2);
-tree.splice(1, 0, 'tree/master');
-const breadcrumb = {
-  message: `${process.env.PROJECT_NAME}`,
-  wo: `${process.env.WO}`,
-  path: `${path.join('https://github.com/Hawkeye-Google-Email-Dev', tree.join('/'))}`
-};
 // convert data.csv to data.json - to be used in gulpfile
 const csvFilePath = `./src/gamma/${process.env.DATA_FILE || 'data.csv'}`;
 
@@ -229,7 +176,7 @@ const dataDump = (copyObj, lang, creative) => {
 };
 
 // Stage data to build creative files
-// const jsonFiles = [...fs.readdirSync(jsonDirPath)];
+const jsonFiles = [...fs.readdirSync(jsonDirPath)];
 const yamlFiles = [...fs.readdirSync(yamlDirPath)];
 
 // determine file type from .env
@@ -263,7 +210,7 @@ if (process.env.COPY_FILE_TYPE.toLowerCase() == 'json') {
   });
 
   // export data to be used in gulpfile.js
-  module.exports = { localHTML, lpHTML, pt, langs, AMP, breadcrumb };
+  module.exports = { localHTML, lpHTML, pt, langs, AMP };
 
 } else if (process.env.COPY_FILE_TYPE.toLowerCase() == 'yaml') {
 
@@ -295,7 +242,7 @@ if (process.env.COPY_FILE_TYPE.toLowerCase() == 'json') {
   });
 
   // export data to be used in gulpfile.js
-  module.exports = { localHTML, lpHTML, pt, langs, AMP, copyData, breadcrumb };
+  module.exports = { localHTML, lpHTML, pt, langs, AMP, copyData };
 
 } else {
 

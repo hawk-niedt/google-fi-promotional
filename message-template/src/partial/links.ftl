@@ -13,6 +13,7 @@
     {# GMKS snippets #}
     <#include '/gkmsid/9877999' ignore_missing=true /> {# lpage #}
     <#include '/gkmsid/9882423' ignore_missing=true/> {# footer address #}
+    <#include '/gkmsid/9326626' ignore_missing=true/> {# logo snippet #}
 
     {# lpage #}
     <#assign lpage_yes = track(landing_page() + '#Yes', 'Yes') />
@@ -24,8 +25,8 @@
 <#function link url track_name anchor="">
 
   <#local 
-    utm_source = "utm_source=" + "promo"
-    utm_medium = "&utm_medium=" + "email_crm"
+    utm_source = "utm_source=" + "promo" 
+    utm_medium = "&utm_medium=" + "email_crm" 
     utm_campaign = "&utm_campaign=" + "GS105392"
     utm_term= "&utm_term=" + track_name
     utm_content= "&utm_content=${gamma.messageId}"
