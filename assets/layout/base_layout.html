@@ -1,0 +1,47 @@
+<#compress>
+<#include '/gkmsid/10066901' ignore_missing=true /> {# HTML Lang #}
+{%- block freemarker %}
+{%- endblock %}
+{% if env.content_type|lower != 'amp' %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="${html_lang('{{ env.language.short_name }}')}">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=yes,initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- smoosh -->
+    <link rel="stylesheet" href="styles.css" />
+    <!-- endsmoosh -->
+    <title>{{ page_title }}</title>
+    {%- block mso_header_styles -%} 
+      <style type="text/css">
+        <!--[if mso]>
+          body, table, td, .btn, a {font-family: sans-serif !important;}
+          p.MsoNormal { margin: 0pt; margin-bottom: 0pt;}
+        <![endif]-->        
+        {% block conditonal_styles %}
+        {% endblock %}
+      </style>
+    {%- endblock -%}
+  </head>
+{%- else %}
+<!-- AMP Header -->
+<!doctype html>
+<html ⚡4email>
+ <head>
+  <!-- AMP scripts -->
+  <meta charset="utf-8">
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  {%- block amp %}
+  {%- endblock %}
+  <style amp4email-boilerplate>body{visibility:hidden}</style>
+  <!-- smoosh -->
+  <link rel="stylesheet" href="styles.css" />
+  <!-- endsmoosh -->
+ </head>
+{% endif %}
+  <body>
+    
+  </body>
+</html>
+</#compress>

@@ -1,0 +1,24 @@
+{# **************** GLOBAL VS LOCAL ASSETS *****************
+  *                                                       *
+  * Important note: When importing, including, or extending files in Nunjucks the file path is relative to the campaign level.
+  * In this example the file path is pointing to the global 'assets' folder which contains another global folder 'layout' containing 'base_layout.html'. 
+  * 'base_layout.html' lives in a global folder so it will be available to all messages in the campaign.
+  * To override a global asset file with a local version change the file path to the message level:
+    - For example, to use a local 'base_layout.html' file:
+      change 'assets/layout/base_layout.html' to 'message-template/src/layout/base_layout.html'
+#}
+{%- extends 'assets/layout/base_layout.html' %}
+
+{# images #}
+{%- set gum = "https://services.google.com/fh/files/emails/" -%}
+{#
+  Add images to 'assets/images/ and uncomment this 'gumdrop' path for local image preview:
+  {%- set gum = "../../assets/images/" -%}
+#}
+
+{# import macro library base #}
+{%- import 'assets/partial/macro_base.html' as base with context %}
+
+{%- block email_content %}
+
+{%- endblock email_content %} 
